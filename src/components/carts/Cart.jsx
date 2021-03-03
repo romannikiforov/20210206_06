@@ -1,9 +1,9 @@
-const Cart = () => {
+const Cart = ({item}) => {
   return (
     <div className="cart">
-      <h3>Title</h3>
-      <p>TEXT</p>
-      <img src="https://fakeimg.pl/75/" alt="my img" />
+      <h3>{item.name}</h3>
+      <p>{item.login}</p>
+      <img src={item.avatar_url} alt={item.name} />
       <button className="delete-button">Delete user</button>
     </div>
   )
