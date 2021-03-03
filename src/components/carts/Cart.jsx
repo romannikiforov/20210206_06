@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 const Cart = ({item}) => {
   return (
     <div className="cart">
@@ -7,6 +9,15 @@ const Cart = ({item}) => {
       <button className="delete-button">Delete user</button>
     </div>
   )
+}
+
+Cart.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    login: PropTypes.string.isRequired,
+    avatar_url: PropTypes.string.isRequired,
+  }),
 }
 
 export default Cart
