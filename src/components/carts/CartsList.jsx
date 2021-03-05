@@ -1,22 +1,15 @@
-import PropTypes from "prop-types"
 import Cart from "./Cart"
+import {useAppContext} from "../../contexts/AppContext"
 
-const CartsList = ({items}) => {
+const CartsList = () => {
+  const state = useAppContext()
   return (
     <div className="cart-box">
-      {items.map(item => (
+      {state.items.map(item => (
         <Cart key={item.id} item={item} />
       ))}
     </div>
   )
-}
-
-CartsList.propTypes = {
-  items: PropTypes.array.isRequired,
-}
-
-CartsList.defaultProps = {
-  items: [],
 }
 
 export default CartsList

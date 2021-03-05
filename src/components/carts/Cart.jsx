@@ -1,9 +1,9 @@
 import {memo, useContext} from "react"
 import PropTypes from "prop-types"
-import AppStateContext from "../../contexts/AppContext"
+import {useDeleteItem} from "../../contexts/AppContext"
 
 const Cart = ({item}) => {
-  const {deleteItem} = useContext(AppStateContext)
+  const deleteItem = useDeleteItem()
 
   return (
     <div className="cart">

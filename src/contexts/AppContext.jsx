@@ -1,7 +1,8 @@
 import {createContext, useReducer, useContext} from "react"
-import {fetchUser, sleep} from "../utils"
+import {fetchUser} from "../utils"
 
 const AppStateContext = createContext()
+const AppDispatchContext = createContext()
 
 const initialState = {
   items: [],
@@ -34,10 +35,12 @@ function reducer(state, action) {
 
 export const AppProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const value = [state, dispatch]
+
   return (
-    <AppStateContext.Provider value={value}>
-      {children}
+    <AppStateContext.Provider value={state}>
+      <AppDispatchContext.Provider value={dispatch}>
+        {children}
+      </AppDispatchContext.Provider>
     </AppStateContext.Provider>
   )
 }
@@ -50,8 +53,22 @@ export const useAppContext = () => {
   return context
 }
 
+export const useAppDispatch = () => {
+  const context = useContext(AppDispatchContext)
+  if (!context) {
+    throw Error("AppDispatchContext must be call within AppContext")
+  }
+  return context
+}
+
+export const useAppAndDiapatchContext = () => [
+  useAppContext(),
+  useAppDispatch(),
+]
+
 export const useAddItem = () => {
-  const [state, dispatch] = useAppContext()
+  const state = useAppContext()
+  const dispatch = useAppDispatch()
   const {items} = state
 
   function addItem(userName) {
@@ -65,6 +82,16 @@ export const useAddItem = () => {
   }
 
   return {state, addItem}
+}
+
+export const useDeleteItem = () => {
+  const dispatch = useAppDispatch()
+  return function (id) {
+    if (!window.confirm("Are you sure ?")) {
+      return
+    }
+    dispatch({type: "itemDeleted", id})
+  }
 }
 
 export default AppStateContext

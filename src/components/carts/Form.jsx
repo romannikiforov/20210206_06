@@ -1,9 +1,12 @@
 import {useState} from "react"
-import PropTypes from "prop-types"
 import {Button, Spinner} from "../../styles/app"
+import {useAddItem} from "../../contexts/AppContext"
 
-const Form = ({addItem, isDisabled}) => {
+const Form = () => {
   const [val, setVal] = useState("")
+  const {addItem, state} = useAddItem()
+
+  const isDisabled = state.status === "pending"
 
   const handleChange = ({target}) => setVal(target.value)
 
@@ -26,10 +29,6 @@ const Form = ({addItem, isDisabled}) => {
       </div>
     </form>
   )
-}
-
-Form.propTypes = {
-  addItem: PropTypes.func.isRequired,
 }
 
 export default Form
