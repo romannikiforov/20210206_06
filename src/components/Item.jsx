@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import "./Item.css";
 
-class Item extends Component {
+class Item extends PureComponent {
   render() {
-    const { item } = this.props;
+    console.log("Rerender");
+    const { item, removeItem, toggleItem } = this.props;
     return (
       <li className="item-box">
         <div className="form-check">
@@ -11,7 +12,7 @@ class Item extends Component {
             className="form-check-input"
             type="checkbox"
             checked={item.packed}
-            onChange={() => {}}
+            onChange={() => toggleItem(item.id)}
             id={item.id}
           />
           <label className="form-check-label" htmlFor={item.id}>
@@ -19,7 +20,10 @@ class Item extends Component {
             {item.value}
           </label>
         </div>
-        <button className="btn btn-secondary btn-sm" onClick={() => {}}>
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={() => removeItem(item.id)}
+        >
           Remove
         </button>
       </li>

@@ -4,7 +4,12 @@ class Filter extends Component {
   render() {
     return (
       <div className="mb-3">
-        <input type="text" className="form-control" />
+        <input
+          onChange={this.props.onChange}
+          value={this.props.searchTerm}
+          type="text"
+          className="form-control"
+        />
       </div>
     );
   }
