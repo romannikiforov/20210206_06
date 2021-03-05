@@ -1,11 +1,11 @@
 import PropTypes from "prop-types"
 import Cart from "./Cart"
 
-const CartsList = ({items}) => {
+const CartsList = ({items, deleteItem}) => {
   return (
     <div className="cart-box">
       {items.map(item => (
-        <Cart key={item.id} item={item} />
+        <Cart deleteItem={deleteItem} key={item.id} item={item} />
       ))}
     </div>
   )

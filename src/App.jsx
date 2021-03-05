@@ -15,7 +15,6 @@ function App() {
     }
     setStatus("pending")
     setError(null)
-    await sleep()
     fetchUser(userName).then(
       item => {
         setItems(x => [...x, item])
@@ -27,6 +26,11 @@ function App() {
       },
     )
   }
+  const deleteItem = id => {
+    if (!window.confirm("Are you sure ?")) return
+
+    setItems(x => x.filter(v => v.id !== id))
+  }
 
   return (
     <div className="container">
@@ -34,7 +38,7 @@ function App() {
       {status === "pending" && <h1>Loading...</h1>}
       {error && <h1>{error.message}</h1>}
 
-      <CartsList items={items} />
+      <CartsList deleteItem={deleteItem} items={items} />
     </div>
   )
 }

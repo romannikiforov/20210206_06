@@ -1,12 +1,14 @@
 import PropTypes from "prop-types"
 
-const Cart = ({item}) => {
+const Cart = ({item, deleteItem}) => {
   return (
     <div className="cart">
       <h3>{item.name}</h3>
       <p>{item.login}</p>
       <img src={item.avatar_url} alt={item.name} />
-      <button className="delete-button">Delete user</button>
+      <button onClick={() => deleteItem(item.id)} className="delete-button">
+        Delete user
+      </button>
     </div>
   )
 }
