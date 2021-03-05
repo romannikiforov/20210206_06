@@ -1,6 +1,10 @@
+import {memo, useContext} from "react"
 import PropTypes from "prop-types"
+import AppStateContext from "../../contexts/AppContext"
 
-const Cart = ({item, deleteItem}) => {
+const Cart = ({item}) => {
+  const {deleteItem} = useContext(AppStateContext)
+
   return (
     <div className="cart">
       <h3>{item.name}</h3>
@@ -22,4 +26,4 @@ Cart.propTypes = {
   }),
 }
 
-export default Cart
+export default memo(Cart)
