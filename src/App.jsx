@@ -8,13 +8,14 @@ function App() {
   const [status, setStatus] = useState("idle")
   const [error, setError] = useState(null)
 
-  const addItem = userName => {
+  const addItem = async userName => {
     if (items.find(v => v.login === userName)) {
       setError(`user ${userName} already exists`)
       return
     }
     setStatus("pending")
     setError(null)
+    await sleep()
     fetchUser(userName).then(
       item => {
         setItems(x => [...x, item])
