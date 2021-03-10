@@ -1,43 +1,41 @@
-import React, { Component } from "react";
-import Item from "./Item";
-import Filter from "./Filter";
+import Item from "./Item"
+import Filter from "./Filter"
+import PropTypes from "prop-types"
+import {useState, memo, useCallback} from "react"
 
-class ListItems extends Component {
-  state = {
-    searchTerm: "",
-  };
+const ListItems = ({title, items}) => {
+  const [search, setSearch] = useState("")
 
-  updateFilter = (e) => this.setState({ searchTerm: e.target.value });
+  const updateFilter = useCallback(
+    ({target}) => setSearch(() => target.value),
+    [],
+  )
 
-  render() {
-    const { searchTerm } = this.state;
-    const { title } = this.props;
-    return (
-      <section>
-        <h3 className="mb-3">{title}</h3>
-        <Filter filter={searchTerm} onChange={this.updateFilter} />
-        <ul className="mb-3 p-0">{this.getBody}</ul>
-      </section>
-    );
-  }
+  const isEmptyItmes = () =>
+    (!items.length ||
+      !items.filter(item =>
+        item.value.toUpperCase().includes(search.toUpperCase()),
+      ).length) && <p>No items</p>
 
-  get getBody() {
-    const { searchTerm } = this.state;
-    const { items, removeItem, toggleItem } = this.props;
-
+  const body = () => {
     return items
-      .filter((item) =>
-        item.value.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .map((item) => (
-        <Item
-          key={item.id}
-          item={item}
-          toggleItem={toggleItem}
-          removeItem={removeItem}
-        />
-      ));
+      .filter(item => item.value.toUpperCase().includes(search.toUpperCase()))
+      .map(item => <Item item={item} key={item.id} />)
   }
+
+  return (
+    <section>
+      <h3 className="mb-3">{title}</h3>
+      <Filter updateFilter={updateFilter} />
+      <ul className="mb-3 p-0">{body()}</ul>
+      {isEmptyItmes()}
+    </section>
+  )
 }
 
-export default ListItems;
+ListItems.propTypes = {
+  items: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+}
+
+export default memo(ListItems)

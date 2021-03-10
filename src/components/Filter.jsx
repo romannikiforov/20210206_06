@@ -1,18 +1,16 @@
-import React, { Component } from "react";
+import PropTypes from "prop-types"
+import {memo} from "react"
 
-class Filter extends Component {
-  render() {
-    return (
-      <div className="mb-3">
-        <input
-          onChange={this.props.onChange}
-          value={this.props.searchTerm}
-          type="text"
-          className="form-control"
-        />
-      </div>
-    );
-  }
+const Filter = ({updateFilter}) => {
+  return (
+    <div className="mb-3">
+      <input type="text" className="form-control" onChange={updateFilter} />
+    </div>
+  )
 }
 
-export default Filter;
+Filter.propTypes = {
+  updateFilter: PropTypes.func.isRequired,
+}
+
+export default memo(Filter)
