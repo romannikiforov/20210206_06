@@ -1,66 +1,76 @@
-import { useState, useCallback, useMemo } from "react";
-import NewItem from "./components/NewItem";
-import ListItems from "./components/ListItems";
-import AppContext from "./contexts/AppContext";
-import { defaultState } from "./data";
+import {Component} from "react"
+import NewItem from "./components/NewItem"
+import ListItems from "./components/ListItems"
+import {defaultState} from "./data"
+import AppContext from "./contexts/AppContext"
 
-const App = () => {
-  const [data, setData] = useState(defaultState);
+class App extends Component {
+  state = {data: defaultState}
 
-  const unpackedFilter = () => data.filter((item) => !item.packed);
-
-  const packedFilter = () => data.filter((item) => item.packed);
-
-  const addNewItem = useCallback(
-    (newItem) => setData((x) => [...x, newItem]),
-    []
-  );
-
-  const delItem = useCallback(
-    (id) => setData((data) => data.filter((item) => item.id !== id)),
-    []
-  );
-
-  const unpackedALL = () =>
-    setData((data) =>
-      data.map((item) => (item.packed ? { ...item, packed: false } : item))
-    );
-
-  const toggle = useCallback(
-    (id) =>
-      setData((data) =>
-        data.map((item) =>
-          item.id === id
-            ? { ...item, packed: (item.packed = !item.packed) }
-            : item
-        )
+  toggle = id =>
+    this.setState(x =>
+      x.data.map(item =>
+        item.id === id ? {...item, packed: (item.packed = !item.packed)} : item,
       ),
-    []
-  );
+    )
 
-  const value = useMemo(() => ({ toggle, delItem }), [delItem, toggle]);
+  addNewItem = newItem =>
+    this.setState(({data}) => ({data: [...data, newItem]}))
 
-  return (
-    <div className="container py-3">
-      <NewItem addNewItem={addNewItem} />
-      <div className="row">
-        <AppContext.Provider value={value}>
-          <div className="col-md-5">
-            <ListItems title="Unpacked Items" items={unpackedFilter()} />
-          </div>
-          <div className="offset-md-2 col-md-5">
-            <ListItems title="Packed Items" items={packedFilter()} />
-            <button
-              className="btn btn-danger btn-lg btn-block"
-              onClick={unpackedALL}
-            >
-              Mark All As Unpacked
-            </button>
-          </div>
-        </AppContext.Provider>
+  delItem = id =>
+    this.setState(({data}) => ({data: data.filter(item => item.id !== id)}))
+
+  unpackedALL = () =>
+    this.setState(({data}) => ({
+      data: data.map(item => (item.packed ? {...item, packed: false} : item)),
+    }))
+
+  unpackedFilter = () => this.state.data.filter(item => !item.packed)
+
+  packedFilter = () => this.state.data.filter(item => item.packed)
+
+  render() {
+    const {
+      unpackedFilter,
+      packedFilter,
+      toggle,
+      addNewItem,
+      delItem,
+      unpackedALL,
+    } = this
+
+    return (
+      <div className="container py-3">
+        <NewItem addNewItem={addNewItem} />
+        <div className="row">
+          <AppContext.Provider value={{delItem, toggle}}>
+            <div className="col-md-5">
+              <ListItems
+                title="Unpacked Items"
+                items={unpackedFilter()}
+                toggle={toggle}
+                delItem={delItem}
+              />
+            </div>
+            <div className="offset-md-2 col-md-5">
+              <ListItems
+                title="Packed Items"
+                items={packedFilter()}
+                toggle={toggle}
+                delItem={delItem}
+              />
+              <button
+                className="btn btn-danger btn-lg btn-block"
+                onClick={unpackedALL}
+              >
+                Mark All As Unpacked
+              </button>
+            </div>
+          </AppContext.Provider>
+        </div>
       </div>
-    </div>
-  );
-};
+    )
+  }
+}
 
-export default App;
+export default App

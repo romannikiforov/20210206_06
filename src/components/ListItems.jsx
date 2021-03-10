@@ -1,36 +1,51 @@
+import {Component} from "react"
 import Item from "./Item"
 import Filter from "./Filter"
 import PropTypes from "prop-types"
-import {useState, memo, useCallback} from "react"
 
-const ListItems = ({title, items}) => {
-  const [search, setSearch] = useState("")
+class ListItems extends Component {
+  state = {
+    searchTerm: "",
+  }
 
-  const updateFilter = useCallback(
-    ({target}) => setSearch(() => target.value),
-    [],
-  )
+  updateFilter = searchTerm => this.setState({searchTerm})
 
-  const isEmptyItmes = () =>
-    (!items.length ||
-      !items.filter(item =>
-        item.value.toUpperCase().includes(search.toUpperCase()),
-      ).length) && <p>No items</p>
+  get isEmptyItmes() {
+    const {items} = this.props
+    const {searchTerm} = this.state
 
-  const body = () => {
+    return (
+      (!items.length ||
+        !items.filter(item =>
+          item.value.toUpperCase().includes(searchTerm.toUpperCase()),
+        ).length) && <p>No items</p>
+    )
+  }
+
+  get body() {
+    const {items} = this.props
+    const {searchTerm} = this.state
+
     return items
-      .filter(item => item.value.toUpperCase().includes(search.toUpperCase()))
+      .filter(item =>
+        item.value.toUpperCase().includes(searchTerm.toUpperCase()),
+      )
       .map(item => <Item item={item} key={item.id} />)
   }
 
-  return (
-    <section>
-      <h3 className="mb-3">{title}</h3>
-      <Filter updateFilter={updateFilter} />
-      <ul className="mb-3 p-0">{body()}</ul>
-      {isEmptyItmes()}
-    </section>
-  )
+  render() {
+    const {title} = this.props
+    const {updateFilter, isEmptyItmes, body} = this
+
+    return (
+      <section>
+        <h3 className="mb-3">{title}</h3>
+        <Filter updateFilter={updateFilter} />
+        <ul className="mb-3 p-0">{body}</ul>
+        {isEmptyItmes}
+      </section>
+    )
+  }
 }
 
 ListItems.propTypes = {
@@ -38,4 +53,4 @@ ListItems.propTypes = {
   title: PropTypes.string.isRequired,
 }
 
-export default memo(ListItems)
+export default ListItems

@@ -1,43 +1,51 @@
-import { memo } from "react";
+import React, {Component} from "react"
+import {generate as id} from "shortid"
+import PropTypes from "prop-types"
 
-import { generate as id } from "shortid";
-import PropTypes from "prop-types";
-import { useState } from "react";
+class NewItem extends Component {
+  state = {
+    value: "",
+  }
 
-const NewItem = ({ addNewItem }) => {
-  const [value, setValue] = useState("");
+  handleChange = ({target}) => this.setState(x => ({...x, value: target.value}))
 
-  const handleChange = ({ target }) => setValue(() => target.value);
+  handleSubmit = e => {
+    const {addNewItem} = this.props
+    const {value} = this.state
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    addNewItem({ id: id(), value, packed: false });
+    addNewItem({id: id(), value, packed: false})
 
-    setValue("");
-  };
+    this.setState({value: ""})
+  }
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div className="row">
-        <div className="col-md-10">
-          <input
-            className="form-control mb-3"
-            type="text"
-            value={value}
-            onChange={handleChange}
-          />
+  render() {
+    const {value} = this.state
+    const {handleChange, handleSubmit} = this
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-md-10">
+            <input
+              className="form-control mb-3"
+              type="text"
+              value={value}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-2">
+            <input className="btn btn-success" type="submit" value="Add item" />
+          </div>
         </div>
-        <div className="col-md-2">
-          <input className="btn btn-success" type="submit" value="Add item" />
-        </div>
-      </div>
-    </form>
-  );
-};
+      </form>
+    )
+  }
+}
 
 NewItem.propTypes = {
   addNewItem: PropTypes.func.isRequired,
-};
+}
 
-export default memo(NewItem);
+export default NewItem
