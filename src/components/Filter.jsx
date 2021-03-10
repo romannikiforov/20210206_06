@@ -1,9 +1,16 @@
-const Filter = () => {
+import PropTypes from "prop-types"
+import {memo} from "react"
+
+const Filter = ({updateFilter}) => {
   return (
     <div className="mb-3">
-      <input type="text" className="form-control" />
+      <input type="text" className="form-control" onChange={updateFilter} />
     </div>
-  );
-};
+  )
+}
 
-export default Filter;
+Filter.propTypes = {
+  updateFilter: PropTypes.func.isRequired,
+}
+
+export default memo(Filter)
